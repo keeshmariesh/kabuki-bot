@@ -2,11 +2,14 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-const username = process.env.USERNAME;
+const localUsername = process.env.USERNAME;
+const kabukiPath = `/home/${localUsername}/code/kabuki-bot/src/music/kabuki.mp3`;
+const kabukiShortPath = `/home/${localUsername}/code/kabuki-bot/src/music/kabuki-short.mp3`;
 
 client.login(process.env.TOKEN);
 console.log('bot logged in');
 
+let dispatcher;
 const dontPlayFor = [];
 const userIntervals = {};
 
@@ -29,11 +32,6 @@ function recordUserActivity(username) {
   }, 30 * 1000);
   userIntervals[username] = interval;
 }
-
-let dispatcher;
-
-const kabukiPath = `/home/${username}/code/kabuki-bot/src/music/kabuki.mp3`;
-const kabukiShortPath = `/home/${username}/code/kabuki-bot/src/music/kabuki-short.mp3`;
 
 function playSound(connection, soundPath) {
   if (dispatcher) {
