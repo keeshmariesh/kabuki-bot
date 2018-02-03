@@ -91,7 +91,13 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
   if (newUserChannel !== undefined && newUserChannel.position === 0) {
     if (dontPlayFor.indexOf(username) === -1) {
       newUserChannel.join().then(connection => {
-        playKabukiShort(connection);
+        if (dontPlayFor.length === 0) {
+          console.log("no one's been here for a while. play long kabuki");
+          playKabuki(connection);
+        } else {
+          console.log('this place is busy! playing short kabuki');
+          playKabukiShort(connection);
+        }
         recordUserActivity(username);
       });
     }
