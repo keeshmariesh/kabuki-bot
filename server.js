@@ -7,6 +7,29 @@ const username = process.env.USERNAME;
 client.login(process.env.TOKEN);
 console.log('bot logged in');
 
+const dontPlayFor = [];
+const userIntervals = {};
+
+function recordUserActivity(username) {
+  console.log(username + ' has done something!');
+  if (dontPlayFor.indexOf(username) === -1) {
+    dontPlayFor.push(username);
+    console.log('wont play for ' + username + ' after this.');
+  }
+  if (userIntervals[username]) {
+    clearInterval(userIntervals[username]);
+    delete userIntervals[username];
+    console.log('reseting activity timer for ' + username);
+  }
+  const interval = setInterval(() => {
+    const index = dontPlayFor.indexOf(username);
+    if (index === -1) return;
+    dontPlayFor.splice(index, 1);
+    console.log(username + ' has been gone long enough. will spam them!');
+  }, 30 * 1000);
+  userIntervals[username] = interval;
+}
+
 let dispatcher;
 
 const kabukiPath = `/home/${username}/code/kabuki-bot/src/music/kabuki.mp3`;
@@ -55,13 +78,24 @@ client.on('message', message => {
 
 client.on('voiceStateUpdate', (oldMember, newMember) => {
   const newUserChannel = newMember.voiceChannel;
-  if(newMember.user.username === 'kabukibot') return;
-  
+  let username;
+  if (oldMember) {
+    username = oldMember.user.username;
+  } else if (newMember) {
+    username = newMember.user.username;
+  }
+
+  if(username === 'kabukibot') return;
+
+  console.log(dontPlayFor);
   if (newUserChannel !== undefined && newUserChannel.position === 0) {
-    newUserChannel.join().then(connection => {
-      playKabukiShort(connection);
-    });
+    if (dontPlayFor.indexOf(username) === -1) {
+      newUserChannel.join().then(connection => {
+        playKabukiShort(connection);
+        recordUserActivity(username);
+      });
+    }
   } else if (newUserChannel === undefined) {
-    //user left
+    recordUserActivity(username);
   }
 });
