@@ -5,6 +5,7 @@ const client = new Discord.Client();
 const username = process.env.USERNAME;
 
 client.login(process.env.TOKEN);
+console.log('bot logged in');
 
 client.on('message', message => {
   // Voice only works in guilds, if the message does not come from a guild,
@@ -25,5 +26,16 @@ client.on('message', message => {
     } else {
       message.reply('You need to join a voice channel first!');
     }
+  }
+});
+
+client.on('voiceStateUpdate', (oldMember, newMember) => {
+  let newUserChannel = newMember.voiceChannel;
+  let oldUserChannel = oldMember.voiceChannel;
+  
+  if (oldUserChannel === undefined && newUserChannel !== undefined) {
+    //user joined a channel
+  } else if (newUserChannel === undefined) {
+    //user left
   }
 });
