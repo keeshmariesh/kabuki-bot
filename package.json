@@ -1,0 +1,15 @@
+{
+  "name": "kabuki-bot",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": "git@github.com:pullman14/kabuki-bot.git",
+  "author": "pullman14 <pitts.114@buckeyemail.osu.edu>",
+  "license": "MIT",
+  "scripts": {
+    "run": "node server.js"
+  },
+  "dependencies": {
+    "discord.js": "^11.3.0",
+    "dotenv": "^5.0.0"
+  }
+}
