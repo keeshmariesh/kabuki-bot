@@ -15,7 +15,7 @@ client.on('message', message => {
     if (message.member.voiceChannel) {
       message.member.voiceChannel.join()
         .then(connection => { // Connection is an instance of VoiceConnection
-          message.reply('I have successfully connected to the channel!');
+          message.reply('YOOOOOOOOOOOOOOOOOOOOOOOO!');
           const dispatcher = connection.playFile(`/home/${username}/code/kabuki-bot/src/music/kabuki.mp3`);
           dispatcher.on('end', e => {
             connection.disconnect();
