@@ -7,6 +7,16 @@ const username = process.env.USERNAME;
 client.login(process.env.TOKEN);
 console.log('bot logged in');
 
+const kabukiPath = `/home/${username}/code/kabuki-bot/src/music/kabuki.mp3`;
+const kabukiShortPath = `/home/${username}/code/kabuki-bot/src/music/kabuki-short.mp3`;
+
+function playKabuki(connection) {
+  const dispatcher = connection.playFile(kabukiPath);
+  dispatcher.on('end', e => {
+    connection.disconnect();
+  });
+}
+
 client.on('message', message => {
   // Voice only works in guilds, if the message does not come from a guild,
   // we ignore it
@@ -17,10 +27,7 @@ client.on('message', message => {
       message.member.voiceChannel.join()
         .then(connection => { // Connection is an instance of VoiceConnection
           message.reply('YOOOOOOOOOOOOOOOOOOOOOOOO!');
-          const dispatcher = connection.playFile(`/home/${username}/code/kabuki-bot/src/music/kabuki.mp3`);
-          dispatcher.on('end', e => {
-            connection.disconnect();
-          });
+          playKabuki(connection);
         })
         .catch(console.log);
     } else {
