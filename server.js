@@ -7,14 +7,28 @@ const username = process.env.USERNAME;
 client.login(process.env.TOKEN);
 console.log('bot logged in');
 
+let dispatcher;
+
 const kabukiPath = `/home/${username}/code/kabuki-bot/src/music/kabuki.mp3`;
 const kabukiShortPath = `/home/${username}/code/kabuki-bot/src/music/kabuki-short.mp3`;
 
-function playKabuki(connection) {
-  const dispatcher = connection.playFile(kabukiPath);
+function playSound(connection, soundPath) {
+  if (dispatcher) {
+    return;
+  }
+  dispatcher = connection.playFile(soundPath);
   dispatcher.on('end', e => {
     connection.disconnect();
+    dispatcher = null;
   });
+}
+
+function playKabuki(connection) {
+  playSound(connection, kabukiPath);
+}
+
+function playKabukiShort(connection) {
+  playSound(connection, kabukiShortPath);
 }
 
 client.on('message', message => {
@@ -26,6 +40,9 @@ client.on('message', message => {
     if (message.member.voiceChannel) {
       message.member.voiceChannel.join()
         .then(connection => { // Connection is an instance of VoiceConnection
+          if (dispatcher) {
+            return message.reply("I'm busy yo'ing!");  
+          }
           message.reply('YOOOOOOOOOOOOOOOOOOOOOOOO!');
           playKabuki(connection);
         })
@@ -42,7 +59,7 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
   
   if (newUserChannel !== undefined && newUserChannel.position === 0) {
     newUserChannel.join().then(connection => {
-      playKabuki(connection);
+      playKabukiShort(connection);
     });
   } else if (newUserChannel === undefined) {
     //user left
