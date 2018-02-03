@@ -37,11 +37,13 @@ client.on('message', message => {
 });
 
 client.on('voiceStateUpdate', (oldMember, newMember) => {
-  let newUserChannel = newMember.voiceChannel;
-  let oldUserChannel = oldMember.voiceChannel;
+  const newUserChannel = newMember.voiceChannel;
+  if(newMember.user.username === 'kabukibot') return;
   
-  if (oldUserChannel === undefined && newUserChannel !== undefined) {
-    //user joined a channel
+  if (newUserChannel !== undefined && newUserChannel.position === 0) {
+    newUserChannel.join().then(connection => {
+      playKabuki(connection);
+    });
   } else if (newUserChannel === undefined) {
     //user left
   }
