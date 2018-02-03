@@ -2,6 +2,8 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
+const username = process.env.USERNAME;
+
 client.login(process.env.TOKEN);
 
 client.on('message', message => {
@@ -14,7 +16,7 @@ client.on('message', message => {
       message.member.voiceChannel.join()
         .then(connection => { // Connection is an instance of VoiceConnection
           message.reply('I have successfully connected to the channel!');
-          const dispatcher = connection.playFile('/home/justin/code/kabuki-bot/src/music/kabuki.mp3');
+          const dispatcher = connection.playFile(`/home/${username}/code/kabuki-bot/src/music/kabuki.mp3`);
           dispatcher.on('end', e => {
             connection.disconnect();
           });
