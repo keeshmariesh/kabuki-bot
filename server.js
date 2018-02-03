@@ -2,6 +2,8 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
+const activityTimer = 30; // minutes
+
 const localUsername = process.env.USERNAME;
 const kabukiPath = `/home/${localUsername}/code/kabuki-bot/src/music/kabuki.mp3`;
 const kabukiShortPath = `/home/${localUsername}/code/kabuki-bot/src/music/kabuki-short.mp3`;
@@ -29,7 +31,7 @@ function recordUserActivity(username) {
     if (index === -1) return;
     dontPlayFor.splice(index, 1);
     console.log(username + ' has been gone long enough. will spam them!');
-  }, 30 * 1000);
+  }, activityTimer * 60 * 1000);
   userIntervals[username] = interval;
 }
 
