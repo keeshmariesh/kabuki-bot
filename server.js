@@ -3,6 +3,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 const activityTimer = 30; // minutes
+const volume = 0.3; // between 0 and 1
 
 const localUsername = process.env.USERNAME;
 const kabukiPath = `/home/${localUsername}/code/kabuki-bot/src/music/kabuki.mp3`;
@@ -39,7 +40,7 @@ function playSound(connection, soundPath) {
   if (dispatcher) {
     return;
   }
-  dispatcher = connection.playFile(soundPath);
+  dispatcher = connection.playFile(soundPath, { volume });
   dispatcher.on('end', e => {
     connection.disconnect();
     dispatcher = null;
@@ -78,6 +79,7 @@ client.on('message', message => {
 
 client.on('voiceStateUpdate', (oldMember, newMember) => {
   const newUserChannel = newMember.voiceChannel;
+  const oldUserChannel = oldMember.voiceChannel;
   let username;
   if (oldMember) {
     username = oldMember.user.username;
@@ -88,7 +90,7 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
   if(username === 'kabukibot') return;
 
   console.log(dontPlayFor);
-  if (newUserChannel !== undefined && newUserChannel.position === 0) {
+  if (newUserChannel !== undefined && newUserChannel.position === 0 && oldUserChannel === undefined) {
     if (dontPlayFor.indexOf(username) === -1) {
       newUserChannel.join().then(connection => {
         if (dontPlayFor.length === 0) {
