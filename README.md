@@ -16,3 +16,6 @@ A Discord bot used to spam some Kabuki sound in our channels because my friends 
 * Add the client secret and your linux username on your computer to your .env file
 * `yarn install`
 * `yarn run dev`
+
+## Docs
+https://discord.js.org/#/
